@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<project name="commons" default="usage" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <target name="usage" description="How to see all the targets">
+    <echo>USAGE: ant -projecthelp</echo>
+    <echo>NOTE: Read the README.txt</echo>
+  </target>
+
+  <target name="init" description="Init all parameters and other settings">
+    <property file="local.build.properties"/>
+    <property file="build.properties"/>
+
+    <artifact:remoteRepository id="wyona.remote.repository" url="http://www.wyona.org/maven2/"/>
+
+    <artifact:dependencies pathId="maven2.classpath" filesetId="maven2.fileset">
+      <remoteRepository refid="wyona.remote.repository"/>
+      <dependency groupId="log4j" artifactId="log4j"
+                  version="1.2.8"/>
+    </artifact:dependencies>
+    <property name="maven2.cp" refid="maven2.classpath"/>
+
+    <property name="classes.dir" value="${build.dir}/classes"/>
+
+    <path id="classpath.core">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${maven2.cp}"/>
+    </path>
+
+    <path id="classpath.examples">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${classes.dir}"/>
+    </path>
+
+    <path id="classpath.run">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${classes.dir}"/>
+      <pathelement path="lib"/> <!-- log4j.properties -->
+      <pathelement path="build/repository"/> <!-- repository configs -->
+      <pathelement path="${maven2.cp}"/>
+    </path>
+  </target>
+
+  <target name="compile-core" description="Compile Java classes" depends="init">
+    <echo>${classes.dir}</echo>
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="src/java" destdir="${classes.dir}"
+           classpathref="classpath.core"
+           debug="true"
+    />
+  </target>
+</project>
