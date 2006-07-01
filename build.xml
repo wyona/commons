@@ -47,12 +47,22 @@
     </path>
   </target>
 
-  <target name="compile-core" description="Compile Java classes" depends="init">
+  <target name="compile" description="Compile Java classes" depends="init">
     <echo>${classes.dir}</echo>
     <mkdir dir="${classes.dir}"/>
     <javac srcdir="src/java" destdir="${classes.dir}"
            classpathref="classpath.core"
            debug="true"
     />
+  </target>
+
+  <target name="jar" description="Create a jar file" depends="init,compile">
+    <mkdir dir="build/lib"/>
+
+    <jar
+      destfile="build/lib/wyona-org-commons-${commons.version}-r${subversion.revision}.jar"
+      basedir="build/classes"
+    >
+    </jar>
   </target>
 </project>
