@@ -9,7 +9,7 @@ public class Path {
 
     private static Category log = Category.getInstance(Path.class);
 
-    private String path;
+    protected String path;
 
     /**
      *
