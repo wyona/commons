@@ -33,6 +33,14 @@ public class Path {
     }
 
     /**
+     *
+     */
+    public Path getParent() {
+        // Quick and dirty
+        return new Path(new java.io.File(path).getParent());
+    }
+
+    /**
      * Return null if no suffix exists
      */
     public String getSuffix() {
