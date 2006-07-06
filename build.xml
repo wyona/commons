@@ -42,7 +42,6 @@
       </fileset>
       <pathelement path="${classes.dir}"/>
       <pathelement path="lib"/> <!-- log4j.properties -->
-      <pathelement path="build/repository"/> <!-- repository configs -->
       <pathelement path="${maven2.cp}"/>
     </path>
   </target>
@@ -56,6 +55,15 @@
     />
   </target>
 
+  <target name="compile-tests" description="Compile Java classes of tests" depends="init, compile">
+    <echo>${classes.dir}</echo>
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="src/test/java" destdir="${classes.dir}"
+           classpathref="classpath.core"
+           debug="true"
+    />
+  </target>
+
   <target name="jar" description="Create a jar file" depends="init,compile">
     <mkdir dir="build/lib"/>
 
@@ -64,5 +72,11 @@
       basedir="build/classes"
     >
     </jar>
+  </target>
+
+  <target name="run-tests" description="Run Tests" depends="init, compile-tests">
+    <java classname="org.wyona.commons.test.HelloWorld">
+      <classpath refid="classpath.run"/>
+    </java>
   </target>
 </project>
