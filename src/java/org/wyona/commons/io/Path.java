@@ -37,7 +37,9 @@ public class Path {
      */
     public Path getParent() {
         // Quick and dirty
-        return new Path(new java.io.File(path).getParent());
+        String parent = new java.io.File(path).getParent();
+        if (parent == null) return null;
+        return new Path(parent);
     }
 
     /**

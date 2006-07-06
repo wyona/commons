@@ -17,6 +17,6 @@ public class HelloWorld {
         System.out.println("Path: " + path);
         System.out.println("Parent: " + path.getParent());
         System.out.println("Parent of parent: " + path.getParent().getParent());
-        System.out.println("Parent of parent or parent: " + path.getParent().getParent().getParent());
+        System.out.println("Parent of parent of parent: " + path.getParent().getParent().getParent());
     }
 }

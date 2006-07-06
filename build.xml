@@ -70,6 +70,7 @@
     <jar
       destfile="build/lib/wyona-org-commons-${commons.version}-r${subversion.revision}.jar"
       basedir="build/classes"
+      excludes="org/wyona/commons/test/**"
     >
     </jar>
   </target>
