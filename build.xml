@@ -80,4 +80,8 @@
       <classpath refid="classpath.run"/>
     </java>
   </target>
+
+  <target name="clean" description="Clean build" depends="init">
+    <delete dir="build"/>
+  </target>
 </project>
