@@ -39,7 +39,7 @@ public class Path {
         // Quick and dirty
         String parent = new java.io.File(path).getParent();
         if (parent == null) return null;
-        if (!parent.endsWith("/")) return new Path(parent + "/");
+        if (!parent.endsWith(java.io.File.separator)) return new Path(parent + java.io.File.separator);
         return new Path(parent);
     }
 

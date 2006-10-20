@@ -1,21 +1,12 @@
 package org.wyona.commons.io;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.StringTokenizer;
-
-import org.apache.log4j.Category;
 
 /**
  *
  */
 public final class FileUtil {
-    private static Category log = Category.getInstance(FileUtil.class);
 
     /**
      * Returns a file by specifying an absolute directory name and a relative file name
@@ -62,20 +53,20 @@ public final class FileUtil {
         String fileName = null;
         String newAbsoluteDir = null;
 
-        if (!(absoluteDir.charAt(absoluteDir.length() - 1) == '/')) {
+        if (!(absoluteDir.charAt(absoluteDir.length() - 1) == File.separatorChar)) {
             newAbsoluteDir = absoluteDir + "/";
         } else {
             newAbsoluteDir = absoluteDir;
         }
 
         if (relativeFile.indexOf("../") == 0) {
-            StringTokenizer token = new StringTokenizer(newAbsoluteDir, "/");
-            newAbsoluteDir = "/";
+            StringTokenizer token = new StringTokenizer(newAbsoluteDir, File.separator);
+            newAbsoluteDir = File.separator;
 
             int numberOfTokens = token.countTokens();
 
             for (int i = 0; i < (numberOfTokens - 1); i++) {
-                newAbsoluteDir = newAbsoluteDir + token.nextToken() + "/";
+                newAbsoluteDir = newAbsoluteDir + token.nextToken() + File.separator;
             }
 
             String newRelativeFile = relativeFile.substring(3, relativeFile.length());
