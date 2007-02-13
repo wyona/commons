@@ -75,6 +75,19 @@
     </jar>
   </target>
 
+  <target name="install-jar" description="Place core and impl jars into local maven repository" depends="jar">
+    <copy file="pom.xml" todir="build/lib"/>
+    <replace file="build/lib/pom.xml" value="${commons.version}-r${subversion.revision}">
+      <replacetoken>@VERSION@</replacetoken>
+    </replace>
+
+    <artifact:pom id="maven.project.core" file="build/lib/pom.xml"/>
+
+    <artifact:install file="build/lib/wyona-org-commons-${commons.version}-r${subversion.revision}.jar">
+      <pom refid="maven.project.core"/>
+    </artifact:install>
+  </target>
+
   <target name="run-tests" description="Run Tests" depends="init, compile-tests">
     <java classname="org.wyona.commons.test.HelloWorld">
       <classpath refid="classpath.run"/>
