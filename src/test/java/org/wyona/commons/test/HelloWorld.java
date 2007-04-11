@@ -23,6 +23,6 @@ public class HelloWorld {
         System.out.println("Parent of parent of parent: " + path.getParent().getParent().getParent());
 
         System.out.println("Concat: " + FileUtil.concat("/home/user/tmp", "../.."));
-        System.out.println("Resolve: " + new FileUtil().resolve(new File("/home/user/tmp"), new File("../..")));
+        System.out.println("Resolve: " + FileUtil.resolve(new File("/home/user/tmp"), new File("../..")));
     }
 }

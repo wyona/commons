@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.FilenameUtils;
+
 /**
  *
  */
@@ -22,7 +24,7 @@ public final class FileUtil {
      * @return DOCUMENT ME!
      */
     public static File file(String absoluteDir, String relativeFile) {
-        File file = new File(fileName(absoluteDir, relativeFile));
+        File file = new File(FilenameUtils.concat(absoluteDir, relativeFile));
         return file;
     }
 
@@ -39,70 +41,18 @@ public final class FileUtil {
         File file = new File(absoluteFile);
 
         if (file.isFile()) {
-            return fileName(file.getParent(), relativeFile);
+            return FilenameUtils.concat(file.getParent(), relativeFile);
         }
 
-        return fileName(absoluteFile, relativeFile);
+        return FilenameUtils.concat(absoluteFile, relativeFile);
     }
 
     /**
      * If the given file has a relative path, resolve it relative to the given dir.
      * If dir is in fact a file, the resolving will use the parent dir of that file.  
-     * @param file
-     * @param dir
      */
-    public File resolve(File file, File dir) {
-        // TODO: Replace this method by some method from org.wyona.commons.io.FileUtil ...
-        if (!file.isAbsolute()) {
-            if (dir.isDirectory()) {
-                //file = FileUtil.file(dir.getAbsolutePath(), file.toString());
-                file = new File(dir, file.getPath());
-            } else {
-                //file = FileUtil.file(dir.getParentFile().getAbsolutePath(), file.toString());
-                file = new File(dir.getParentFile(), file.getPath());
-            }
-        }
-        return file;
-    }
-
-    /**
-     * Returns an absolute file name by specifying an absolute directory name and a relative file
-     * name
-     * 
-     * @param absoluteDir DOCUMENT ME!
-     * @param relativeFile DOCUMENT ME!
-     * 
-     * @return DOCUMENT ME!
-     */
-    private static String fileName(String absoluteDir, String relativeFile) {
-        String fileName = null;
-        String newAbsoluteDir = null;
-
-        if (!(absoluteDir.charAt(absoluteDir.length() - 1) == File.separatorChar)) {
-            newAbsoluteDir = absoluteDir + "/";
-        } else {
-            newAbsoluteDir = absoluteDir;
-        }
-
-        if (relativeFile.indexOf("../") == 0) {
-            StringTokenizer token = new StringTokenizer(newAbsoluteDir, File.separator);
-            newAbsoluteDir = File.separator;
-
-            int numberOfTokens = token.countTokens();
-
-            for (int i = 0; i < (numberOfTokens - 1); i++) {
-                newAbsoluteDir = newAbsoluteDir + token.nextToken() + File.separator;
-            }
-
-            String newRelativeFile = relativeFile.substring(3, relativeFile.length());
-            fileName = fileName(newAbsoluteDir, newRelativeFile);
-        } else if (relativeFile.indexOf("./") == 0) {
-            fileName = newAbsoluteDir + relativeFile.substring(2, relativeFile.length());
-        } else {
-            fileName = newAbsoluteDir + relativeFile;
-        }
-
-        return fileName;
+    public static File resolve(File absoluteFile, File relativeFile) {
+        return new File(concat(absoluteFile.getPath(), relativeFile.getPath()));
     }
 
     /**

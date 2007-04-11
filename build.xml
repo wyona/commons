@@ -15,8 +15,8 @@
 
     <artifact:dependencies pathId="maven2.classpath" filesetId="maven2.fileset">
       <remoteRepository refid="wyona.remote.repository"/>
-      <dependency groupId="log4j" artifactId="log4j"
-                  version="1.2.8"/>
+      <dependency groupId="log4j" artifactId="log4j" version="1.2.8"/>
+      <dependency groupId="commons-io" artifactId="commons-io" version="1.2"/>
     </artifact:dependencies>
     <property name="maven2.cp" refid="maven2.classpath"/>
 
