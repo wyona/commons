@@ -46,6 +46,26 @@ public final class FileUtil {
     }
 
     /**
+     * If the given file has a relative path, resolve it relative to the given dir.
+     * If dir is in fact a file, the resolving will use the parent dir of that file.  
+     * @param file
+     * @param dir
+     */
+    public File resolve(File file, File dir) {
+        // TODO: Replace this method by some method from org.wyona.commons.io.FileUtil ...
+        if (!file.isAbsolute()) {
+            if (dir.isDirectory()) {
+                //file = FileUtil.file(dir.getAbsolutePath(), file.toString());
+                file = new File(dir, file.getPath());
+            } else {
+                //file = FileUtil.file(dir.getParentFile().getAbsolutePath(), file.toString());
+                file = new File(dir.getParentFile(), file.getPath());
+            }
+        }
+        return file;
+    }
+
+    /**
      * Returns an absolute file name by specifying an absolute directory name and a relative file
      * name
      * 
