@@ -24,5 +24,6 @@ public class HelloWorld {
 
         System.out.println("Concat: " + FileUtil.concat("/home/user/tmp", "../.."));
         System.out.println("Resolve: " + FileUtil.resolve(new File("/home/user/tmp"), new File("../..")));
+        System.out.println("Resolve: " + FileUtil.resolve(new File("/home/user/tmp/"), new File("../../hugo.txt")));
     }
 }
