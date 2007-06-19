@@ -21,9 +21,21 @@ public class PathUtil {
      *
      */
     public static String getParent(String path) {
-        // Quick and dirty
-        String parent = new java.io.File(path).getParent();
-        return parent;
+        if (path.indexOf("\\") >= 0) {
+            Exception e = new Exception("Do not use backward slashes: " + path);
+            log.error(e.getMessage(), e);
+            return null;
+        }
+        if (path.equals("/")) {
+            log.warn("Root / has no parent!");
+            return null;
+        }
+        String parent = path;
+        if (path.endsWith("/")) {
+            parent = path.substring(0, path.length() - 1);
+        }
+        System.out.println(parent);
+        return parent.substring(0, parent.lastIndexOf("/") + 1);
     }
 
     /**
