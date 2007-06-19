@@ -34,7 +34,6 @@ public class PathUtil {
         if (path.endsWith("/")) {
             parent = path.substring(0, path.length() - 1);
         }
-        System.out.println(parent);
         return parent.substring(0, parent.lastIndexOf("/") + 1);
     }
 
