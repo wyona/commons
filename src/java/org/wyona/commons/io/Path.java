@@ -56,4 +56,14 @@ public class Path {
     public String toString() {
         return path;
     }
+
+    /**
+     *
+     */
+    public boolean isCollection() {
+        if (path.lastIndexOf("/") == path.length() - 1) {
+            return true;
+        }
+        return false;
+    }
 }
