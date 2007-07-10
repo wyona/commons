@@ -55,7 +55,9 @@ public class PathUtil {
         if (!new Path(absolutePath).isCollection()) {
             newPath = new Path(newPath).getParent().toString();
         }
-        log.error(newPath);
-        return null;
+        if (relativePath.startsWith("../")) {
+            return concat(new Path(newPath).getParent().toString(), relativePath.substring(3));
+        }
+        return newPath + relativePath;
     }
 }

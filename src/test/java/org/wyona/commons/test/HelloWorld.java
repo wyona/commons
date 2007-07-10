@@ -23,11 +23,11 @@ public class HelloWorld {
         System.out.println("Parent of parent: " + path.getParent().getParent());
         System.out.println("Parent of parent of parent: " + path.getParent().getParent().getParent());
 
-        System.out.println("Concat: " + PathUtil.concat("/home/user/tmp", "../.."));
-        System.out.println("Concat: " + PathUtil.concat("/home/user/tmp/", "../../hugo.txt"));
+        System.out.println("Concat with PathUtil: " + PathUtil.concat("/home/user/tmp", "../../"));
+        System.out.println("Concat with PathUtil: " + PathUtil.concat("/home/user/tmp/", "../../hugo.txt"));
 
-        System.out.println("Concat: " + FileUtil.concat("/home/user/tmp", "../.."));
-        System.out.println("Resolve: " + FileUtil.resolve(new File("/home/user/tmp"), new File("../..")));
-        System.out.println("Resolve: " + FileUtil.resolve(new File("/home/user/tmp/"), new File("../../hugo.txt")));
+        System.out.println("Concat with FileUtil: " + FileUtil.concat("/home/user/tmp", "../.."));
+        System.out.println("Resolve with FileUtil: " + FileUtil.resolve(new File("/home/user/tmp"), new File("../..")));
+        System.out.println("Resolve with FileUtil: " + FileUtil.resolve(new File("/home/user/tmp/"), new File("../../hugo.txt")));
     }
 }
