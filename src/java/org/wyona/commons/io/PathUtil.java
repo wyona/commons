@@ -27,7 +27,7 @@ public class PathUtil {
             return null;
         }
         if (path.equals("/")) {
-            log.warn("Root / has no parent!");
+            if (log.isDebugEnabled()) log.debug("Root / has no parent!");
             return null;
         }
         String parent = path;
@@ -47,4 +47,15 @@ public class PathUtil {
         return path.substring(lio + 1);
     }
 
+    /**
+     *
+     */
+    public static String concat(String absolutePath, String relativePath) {
+        String newPath = absolutePath;
+        if (!new Path(absolutePath).isCollection()) {
+            newPath = new Path(newPath).getParent().toString();
+        }
+        log.error(newPath);
+        return null;
+    }
 }
