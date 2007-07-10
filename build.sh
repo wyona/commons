@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "INFO: Build Security ..."
+echo "INFO: Build Commons ..."
 
 # ----- Parameters
 
@@ -28,7 +28,7 @@ ORIGINAL_PATH=$PATH
 PATH=$PWD/tools/maven-2.0.4/bin:$ANT_HOME/bin:$PATH
 #echo $PATH
 
-# ----- Build Security ...
+# ----- Build Commons ...
 #mvn --version
 ant -version
 ant -f build.xml $@
