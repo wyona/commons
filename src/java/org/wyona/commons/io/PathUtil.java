@@ -10,11 +10,22 @@ public class PathUtil {
     private static Category log = Category.getInstance(PathUtil.class);
 
     /**
-     *
+     * Get name, e.g. path = /foo/bar.txt --> bar.txt
      */
     public static String getName(String path) {
         // Quick and dirty
         return new java.io.File(path).getName();
+    }
+
+    /**
+     * Get name without suffix, e.g. path = /foo/bar.txt --> bar
+     */
+    public static String getNameWithoutSuffix(String path) {
+        String name = getName(path);
+        if (name.lastIndexOf(".") >= 0) {
+            return name.substring(0, name.lastIndexOf("."));
+        }
+        return name;
     }
 
     /**
