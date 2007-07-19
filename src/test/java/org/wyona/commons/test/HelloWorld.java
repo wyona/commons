@@ -29,5 +29,9 @@ public class HelloWorld {
         System.out.println("Concat with FileUtil: " + FileUtil.concat("/home/user/tmp", "../.."));
         System.out.println("Resolve with FileUtil: " + FileUtil.resolve(new File("/home/user/tmp"), new File("../..")));
         System.out.println("Resolve with FileUtil: " + FileUtil.resolve(new File("/home/user/tmp/"), new File("../../hugo.txt")));
+
+        System.out.println("Name without suffix: \"" + PathUtil.getNameWithoutSuffix("/foo/bar.txt") + "\"");
+        System.out.println("Name without suffix: \"" + PathUtil.getNameWithoutSuffix("/foo/.txt") + "\"");
+        System.out.println("Name without suffix: \"" + PathUtil.getNameWithoutSuffix("/foo/bar") + "\"");
     }
 }
