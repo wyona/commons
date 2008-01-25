@@ -14,11 +14,24 @@ public class MimeTypeUtil {
      * @return true if mime-type is textual.
      */
     public static boolean isTextual(String mimeType) {
-        if (mimeType.startsWith("text") 
-                || mimeType.equals("application/xml")
-                || mimeType.equals("application/xhtml+xml")
+        if (mimeType.startsWith("text/") 
                 || mimeType.equals("application/x-javascript")
-                || mimeType.equals("application/javascript")) {
+                || mimeType.equals("application/javascript")
+                || mimeType.equals("application/json")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Indicates whether a mimet-ype represents an XML document
+     * @param mimeType
+     * @return true if mime-type is XML.
+     */
+    public static boolean isXML(String mimeType) {
+        if (mimeType.equals("application/xml")
+                || mimeType.endsWith("+xml")) {
             return true;
         } else {
             return false;
@@ -53,7 +66,9 @@ public class MimeTypeUtil {
         if (type.equals("application/x-javascript") || type.equals("text/javascript")) return "js";
         if (type.equals("application/x-xpinstall")) return "xpi";
         if (type.equals("application/zip")) return "zip";
+        if (type.equals("image/bmp")) return "bmp";
         if (type.equals("image/gif")) return "gif";
+        if (type.equals("image/tiff")) return "tif";
         if (type.equals("image/jpeg")) return "jpg";
         if (type.equals("image/png")) return "png";
         if (type.equals("text/css")) return "css";
@@ -73,24 +88,32 @@ public class MimeTypeUtil {
      * @return mime-type
      */
     public static String guessMimeType(String extension) {
-        String ext = extension.toLowerCase();
-        if (ext.equals("css")) return "text/css";
-        if (ext.equals("doc")) return "application/msword";
-        if (ext.equals("gif")) return "image/gif";
-        if (ext.equals("html") || ext.equals("htm")) return "text/html";
-        if (ext.equals("jpg") || ext.equals("jpg")) return "image/jpeg";
-        if (ext.equals("js")) return "application/x-javascript";
-        if (ext.equals("mov")) return "video/quicktime";
-        if (ext.equals("odt")) return "application/vnd.oasis.opendocument.text";
-        if (ext.equals("pdf")) return "application/pdf";
-        if (ext.equals("png")) return "image/png";
-        if (ext.equals("sxc")) return "application/vnd.sun.xml.calc";
-        if (ext.equals("txt")) return "text/plain";
-        if (ext.equals("xhtml")) return "application/xhtml+xml";
-        if (ext.equals("xml")) return "application/xml";
-        if (ext.equals("xpi")) return "application/x-xpinstall";
-        if (ext.equals("zip")) return "application/zip";
-        // TODO: add more
+        if(extension != null){
+            String ext = extension.toLowerCase();
+            
+            if (ext.equals("css")) return "text/css";
+            if (ext.equals("doc")) return "application/msword";
+            
+            if (ext.equals("html") || ext.equals("htm")) return "text/html";
+            
+            if (ext.equals("gif")) return "image/gif";
+            if (ext.equals("jpg") || ext.equals("jpeg")) return "image/jpeg";
+            if (ext.equals("bmp")) return "image/bmp";
+            if (ext.equals("tiff") || ext.equals("tif")) return "image/tiff";
+            if (ext.equals("png")) return "image/png";
+            
+            if (ext.equals("js")) return "application/x-javascript";
+            if (ext.equals("mov")) return "video/quicktime";
+            if (ext.equals("odt")) return "application/vnd.oasis.opendocument.text";
+            if (ext.equals("pdf")) return "application/pdf";
+            if (ext.equals("sxc")) return "application/vnd.sun.xml.calc";
+            if (ext.equals("txt")) return "text/plain";
+            if (ext.equals("xhtml")) return "application/xhtml+xml";
+            if (ext.equals("xml")) return "application/xml";
+            if (ext.equals("xpi")) return "application/x-xpinstall";
+            if (ext.equals("zip")) return "application/zip";
+            // TODO: add more
+        }
         return "application/octet-stream"; // default
     }
 
