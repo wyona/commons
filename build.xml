@@ -23,9 +23,11 @@
     <property name="classes.dir" value="${build.dir}/classes"/>
 
     <path id="classpath.core">
+<!-- OBSOLETE, because of artifact:dependencies (see above)
       <fileset dir="lib">
         <include name="*.jar"/>
       </fileset>
+-->
       <pathelement path="${maven2.cp}"/>
     </path>
 
