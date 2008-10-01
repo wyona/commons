@@ -18,9 +18,7 @@
       <dependency groupId="log4j" artifactId="log4j" version="1.2.8"/>
       <dependency groupId="commons-io" artifactId="commons-io" version="1.2"/>
       <dependency groupId="commons-jxpath" artifactId="commons-jxpath" version="1.3"/>
-<!--
-      <dependency groupId="org.junit" artifactId="junit" version="4.4"/>
--->
+      <dependency groupId="junit" artifactId="junit-dep" version="4.5"/>
     </artifact:dependencies>
     <property name="maven2.cp" refid="maven2.classpath"/>
 
@@ -36,16 +34,20 @@
     </path>
 
     <path id="classpath.examples">
+<!--
       <fileset dir="lib">
         <include name="*.jar"/>
       </fileset>
+-->
       <pathelement path="${classes.dir}"/>
     </path>
 
     <path id="classpath.run">
+<!--
       <fileset dir="lib">
         <include name="*.jar"/>
       </fileset>
+-->
       <pathelement path="${classes.dir}"/>
       <pathelement path="lib"/> <!-- log4j.properties -->
       <pathelement path="${maven2.cp}"/>
