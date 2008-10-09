@@ -15,10 +15,15 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.apache.xml.resolver.tools.CatalogResolver;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+/**
+ * XML utility class
+ */
 public class XMLHelper {
     private static final Logger log = Logger.getLogger( XMLHelper.class );
     private static final String YES = "yes";
@@ -60,25 +65,35 @@ public class XMLHelper {
         }
         return strResult.getWriter().toString();
     }
+
+    /**
+     * Create DOM document from input stream
+     * @param in Input stream
+     */
+    public static Document readDocument(java.io.InputStream in) throws Exception {
+        return createBuilder().parse(in);
+    }
            
     /**
      * Creates a Document instance ( DOM )
      * 
-     * @param rootName Name of the root element
+     * @param namespace Namespace of root element
+     * @param localname Local name of the root element
      * @return Document object representing the rootname
      * @throws RuntimeException
      */
-    public static final Document  createDocument( String rootName ) throws RuntimeException {
-        DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder;
+    public static final Document createDocument(String namespace, String localname) throws RuntimeException {
         try {
-            docBuilder = dbfac.newDocumentBuilder();
-            Document doc = docBuilder.newDocument();
-            Element root = doc.createElement( rootName );
-            doc.appendChild(root);
+            DocumentBuilder docBuilder = createBuilder();
+            org.w3c.dom.DOMImplementation domImpl = docBuilder.getDOMImplementation();
+            org.w3c.dom.DocumentType doctype = null;
+            Document doc = domImpl.createDocument(namespace, localname, doctype);
+            if (namespace != null) {
+                doc.getDocumentElement().setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", namespace);
+            }
             return doc;
         } catch (ParserConfigurationException e) {
-            throw new RuntimeException( "Unable to create a document builder, check your xml configuration" );
+            throw new RuntimeException( "Unable to create a DOM document, check your xml configuration" );
         }
     }
     
@@ -103,5 +118,20 @@ public class XMLHelper {
         Text text = doc.createTextNode( value );
         child.appendChild(text);
         return child;
+    }
+
+    /**
+     * Creates a non-validating and namespace-aware DocumentBuilder.
+     * @return A new DocumentBuilder object.
+     * @throws ParserConfigurationException if an error occurs
+     */
+    public static DocumentBuilder createBuilder() throws ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+
+        CatalogResolver cr = new CatalogResolver();
+        builder.setEntityResolver(cr);
+        return builder;
     }
 }
