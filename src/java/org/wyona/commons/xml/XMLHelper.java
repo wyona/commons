@@ -142,4 +142,51 @@ public class XMLHelper {
         javax.xml.transform.TransformerFactory.newInstance().newTransformer().transform(new javax.xml.transform.dom.DOMSource(doc), new javax.xml.transform.stream.StreamResult(out));
         out.close();
     }
+
+    /**
+     * Get child elements with a specific local name and a matching attribute name/value
+     */
+    public static org.w3c.dom.Element[] getElements(org.w3c.dom.Element element, String localName, String attributeName, String attributeValue) throws Exception {
+        org.w3c.dom.Element[] elements = getChildElements(element, localName, null);
+        java.util.Vector children = new java.util.Vector();
+        for (int i = 0; i < elements.length; i++) {
+            org.w3c.dom.Element child = elements[i];
+            if (child.getAttribute(attributeName).equals(attributeValue)) {
+                children.addElement(child);
+            }
+        }
+        org.w3c.dom.Element[] childElements = new org.w3c.dom.Element[children.size()];
+        for (int i = 0; i < childElements.length; i++) {
+            childElements[i] = (org.w3c.dom.Element) children.elementAt(i);
+        }
+        return childElements;
+    }
+
+    /**
+     * Get child elements with a specific local name and namespace
+     * @param node Node
+     * @param localName Local name of child nodes
+     * @param namespaceURI Namespace of child nodes, whereas if null is specified, then it will not be taken into account
+     */
+    public static org.w3c.dom.Element[] getChildElements(org.w3c.dom.Node node, String localName, String namespaceURI) throws Exception {
+        org.w3c.dom.NodeList nl = node.getChildNodes();
+        java.util.Vector children = new java.util.Vector();
+        for (int i = 0; i < nl.getLength(); i++) {
+            org.w3c.dom.Node child = nl.item(i);
+            if ((child.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) && child.getLocalName().equals(localName)) {
+                if (namespaceURI != null) {
+                    if (child.getNamespaceURI().equals(namespaceURI)) {
+                        children.addElement(child);
+                    }
+                } else {
+                    children.addElement(child);
+                }
+            }
+        }
+        org.w3c.dom.Element[] childElements = new org.w3c.dom.Element[children.size()];
+        for (int i = 0; i < childElements.length; i++) {
+            childElements[i] = (org.w3c.dom.Element) children.elementAt(i);
+        }
+        return childElements;
+    }
 }
