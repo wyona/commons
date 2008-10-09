@@ -134,4 +134,12 @@ public class XMLHelper {
         builder.setEntityResolver(cr);
         return builder;
     }
+
+    /**
+     * Write DOM document into output stream
+     */
+    public static void writeDocument(Document doc, java.io.OutputStream out) throws Exception {
+        javax.xml.transform.TransformerFactory.newInstance().newTransformer().transform(new javax.xml.transform.dom.DOMSource(doc), new javax.xml.transform.stream.StreamResult(out));
+        out.close();
+    }
 }
