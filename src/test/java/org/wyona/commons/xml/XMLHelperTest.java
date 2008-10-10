@@ -16,7 +16,7 @@ public class XMLHelperTest {
         final String expectedXML = "<wyona><employees><employee>employee0</employee><employee>employee1</employee><employee>employee2</employee><employee>employee3</employee><employee>employee4</employee><employee>employee5</employee><employee>employee6</employee><employee>employee7</employee><employee>employee8</employee><employee>employee9</employee></employees></wyona>";
         
         try {
-            Document doc = XMLHelper.createDocument( "wyona");
+            Document doc = XMLHelper.createDocument( null, "wyona");
             Element root = doc.getDocumentElement();
             root.appendChild( getEmployees( doc ) );
             String result = XMLHelper.documentToString( doc, true, false, null );
@@ -30,7 +30,7 @@ public class XMLHelperTest {
     public void testCreateDOM() {
         final String rootTagname = "root";
         try {
-            Document doc = XMLHelper.createDocument( rootTagname );
+            Document doc = XMLHelper.createDocument( null, rootTagname );
             assertNotNull( "Document could not be created", doc );
             Element root = doc.getDocumentElement();
             assertNotNull( "Document root element should not be null",root );
@@ -45,14 +45,14 @@ public class XMLHelperTest {
     public void testCreateTextElement() {
         final String path =  "//employees/employee";
         try {
-            Document doc = XMLHelper.createDocument( "wyona");
+            Document doc = XMLHelper.createDocument( null, "wyona");
             Element root = doc.getDocumentElement();
             root.appendChild( getEmployees( doc ) );
             boolean located = false;
             NodePointer pointer;
             JXPathContext context = JXPathContext.newContext(doc);
             Iterator<NodePointer> projectList = context.iteratePointers( path );
-            while ((pointer = (NodePointer)projectList.next())!=null){
+            while ((pointer = projectList.next())!=null){
                 located = true;
                 break;
             }
