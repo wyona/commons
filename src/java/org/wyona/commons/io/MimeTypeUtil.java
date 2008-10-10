@@ -19,9 +19,8 @@ public class MimeTypeUtil {
                 || mimeType.equals("application/javascript")
                 || mimeType.equals("application/json")) {
             return true;
-        } else {
-            return false;
-        }
+        } 
+        return false;
     }
     
     /**
@@ -33,9 +32,8 @@ public class MimeTypeUtil {
         if (mimeType.equals("application/xml")
                 || mimeType.endsWith("+xml")) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
     
     /**
@@ -47,9 +45,8 @@ public class MimeTypeUtil {
     public static boolean isHTML(String mimeType) {
         if (mimeType.equals("text/html") || mimeType.equals("application/xhtml+xml")) {
             return true;
-        } else {
-            return false;
-        }
+        } 
+        return false;
     }
     
     /**
