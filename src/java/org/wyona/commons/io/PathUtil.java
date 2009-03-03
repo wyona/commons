@@ -32,6 +32,7 @@ public class PathUtil {
      *
      */
     public static String getParent(String path) {
+        // TODO: Check if path is null  or empty ("") and return null and log a warning!
         if (path.indexOf("\\") >= 0) {
             Exception e = new Exception("Do not use backward slashes: " + path);
             log.error(e.getMessage(), e);
