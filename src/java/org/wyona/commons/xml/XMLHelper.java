@@ -29,6 +29,7 @@ public class XMLHelper {
     private static final String YES = "yes";
     private static final String NO = "no";
     private static final String DEFAULT_ENCODING = "iso-8859-1";
+    private static final int INDENT_AMOUNT = 2;
     
     /**
      * Convert a Document into something human readable.
@@ -41,9 +42,11 @@ public class XMLHelper {
      */
     public static final String documentToString( Document document, boolean isFragment, boolean indent, String charset ) {
         if( document == null ){
-            log.warn("document to string called with a null document!, don't do this.");
+            log.error("Document is null!");
             return null;
         }
+
+// NOTE/TODO: The code snippet below seems to have problems with empty tags, for example <my-tag/>
         StringWriter strWtr = new StringWriter();
         StreamResult strResult = new StreamResult(strWtr);
         TransformerFactory tfac = TransformerFactory.newInstance();
@@ -52,18 +55,44 @@ public class XMLHelper {
             if( isFragment )
                 t.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, YES );
             
-            if( charset == null)
+            if( charset == null) {
                 t.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
-            else 
+	    } else {
                 t.setOutputProperty(OutputKeys.ENCODING, charset );
+            }
+
             t.setOutputProperty(OutputKeys.INDENT, (indent) ? YES : NO);
             t.setOutputProperty(OutputKeys.METHOD, "xml"); //xml, html, text
-            t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-            t.transform( new DOMSource(document.getDocumentElement()), strResult);
+            t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "" + INDENT_AMOUNT);
+            t.transform(new DOMSource(document.getDocumentElement()), strResult);
         } catch (Exception e) {
-            log.error( e.getLocalizedMessage() );
+            log.error(e, e);
+            //throw e;
         }
         return strResult.getWriter().toString();
+
+
+
+// The following code snippets has NO problems with empty tags, but depends explicitely on the Apache XMLSerializer!
+/*
+        try {
+            java.io.ByteArrayOutputStream stream = new java.io.ByteArrayOutputStream();
+            org.apache.xml.serialize.OutputFormat outputformat = new org.apache.xml.serialize.OutputFormat();
+            outputformat.setIndent(INDENT_AMOUNT);
+            outputformat.setIndenting(indent);
+            outputformat.setPreserveSpace(false);
+            org.apache.xml.serialize.XMLSerializer serializer = new org.apache.xml.serialize.XMLSerializer();
+            serializer.setOutputFormat(outputformat);
+            serializer.setOutputByteStream(stream);
+            serializer.asDOMSerializer();
+            serializer.serialize(document.getDocumentElement());
+            return new StringBuilder(stream.toString()).toString();
+        } catch (Exception e) {
+            log.error(e, e);
+            //throw e;
+            return null;
+        }
+*/
     }
 
     /**
