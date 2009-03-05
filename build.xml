@@ -84,17 +84,35 @@
     </jar>
   </target>
 
-  <target name="install-jar" description="Place jar into local maven repository" depends="clean, jar">
+  <target name="patch-pom-file">
     <copy file="pom.xml" todir="build/lib"/>
     <replace file="build/lib/pom.xml" value="${commons.version}-r${subversion.revision}">
       <replacetoken>@VERSION@</replacetoken>
     </replace>
+  </target>
 
+  <target name="install-jar" description="Place jar into local maven repository" depends="clean, jar, patch-pom-file">
     <artifact:pom id="maven.project.core" file="build/lib/pom.xml"/>
 
     <artifact:install file="build/lib/wyona-org-commons-${commons.version}-r${subversion.revision}.jar">
       <pom refid="maven.project.core"/>
     </artifact:install>
+  </target>
+
+  <target name="deploy-jar" description="Upload jar file into remote maven repository" depends="clean, init, jar, patch-pom-file">
+    <!-- <artifact:install-provider artifactId="wagon-ssh" version="1.0-beta-2"/> -->
+    <artifact:install-provider artifactId="wagon-ssh" version="1.0-alpha-7"/>
+
+    <echo>deploying to ${repository.url}</echo>
+
+    <artifact:pom id="maven.project.core" file="build/lib/pom.xml"/>
+
+    <artifact:deploy file="build/lib/wyona-org-commons-${commons.version}-r${subversion.revision}.jar">
+      <remoteRepository url="${repository.url}">
+        <authentication username="${repository.username}" privateKey="${user.home}/.ssh/id_dsa"/>
+      </remoteRepository>
+      <pom refid="maven.project.core"/>
+    </artifact:deploy>
   </target>
 
   <target name="run-tests" description="Run Tests" depends="init, compile-tests">
