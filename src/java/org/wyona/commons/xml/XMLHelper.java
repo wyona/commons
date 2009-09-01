@@ -1,6 +1,7 @@
 package org.wyona.commons.xml;
 
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -19,6 +20,8 @@ import org.apache.xml.resolver.tools.CatalogResolver;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 /**
@@ -93,6 +96,49 @@ public class XMLHelper {
             return null;
         }
 */
+    }
+
+    /* Seems like we do not always have a DOM3 Save compliant parser in the classpath...
+    private static LSSerializer getDOMserializer() throws Exception {
+        DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+        DOMImplementation impl = registry.getDOMImplementation("Core 2.0 LS-Save 3.0");
+        if (impl == null) {
+            throw new UnsupportedOperationException("Could not find a DOM3 Save compliant parser!");
+        }
+        DOMImplementationLS implls = (DOMImplementationLS) impl;
+        LSSerializer writer = implls.createLSSerializer();
+        return writer;
+        writer.writeToString(...)
+    }
+    */
+
+    private static Transformer getXMLidentityTransformer(int indentation) throws Exception {
+        TransformerFactory factory = TransformerFactory.newInstance();
+        Transformer t = factory.newTransformer(); // identity transform
+        t.setOutputProperty(OutputKeys.INDENT, (indentation != 0) ? YES : NO);
+        t.setOutputProperty(OutputKeys.METHOD, "xml"); //xml, html, text
+        t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "" + indentation);
+        return t;
+    }
+
+    public static String stringFromNodeList(NodeList nodeList, int indentation) {
+        StringBuilder sb = new StringBuilder();
+        Writer w = new StringWriter();
+        int n = nodeList.getLength();
+        try {
+            Transformer transformer = getXMLidentityTransformer(indentation);
+            for (int i = 0; i < n; i++) {
+                Node node = nodeList.item(i);
+                DOMSource source = new DOMSource(node);
+                StreamResult result = new StreamResult(w);
+                transformer.transform(source, result);
+                sb.append(w.toString());
+            }
+            if (log.isDebugEnabled()) log.debug("sb: " + sb);
+            return sb.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
