@@ -82,6 +82,9 @@
     <mkdir dir="${classes.dir}"/>
     <javac srcdir="src/java" destdir="${classes.dir}"
            classpathref="classpath.core"
+           source="1.5"
+           target="1.5"
+           encoding="UTF-8"
            debug="true"
     />
   </target>
@@ -91,6 +94,9 @@
     <mkdir dir="${classes.dir}"/>
     <javac srcdir="src/test/java" destdir="${classes.dir}"
            classpathref="classpath.core"
+           source="1.5"
+           target="1.5"
+           encoding="UTF-8"
            debug="true"
     />
   </target>
