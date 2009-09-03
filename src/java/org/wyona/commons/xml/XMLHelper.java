@@ -248,13 +248,21 @@ public class XMLHelper {
         java.util.Vector children = new java.util.Vector();
         for (int i = 0; i < nl.getLength(); i++) {
             org.w3c.dom.Node child = nl.item(i);
-            if ((child.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) && child.getLocalName().equals(localName)) {
-                if (namespaceURI != null) {
-                    if (child.getNamespaceURI().equals(namespaceURI)) {
+            if (child.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+                String childLocalName = child.getLocalName();
+                if (childLocalName == null) {
+                    log.warn("Local name is null (node name: " + child.getNodeName() + ")! Try using to strip off tagname ...");
+                    childLocalName = getLocalPart(((Element) child).getTagName());
+                    log.warn("Local name based on tagname: " + childLocalName);
+                }
+                if (childLocalName.equals(localName)) {
+                    if (namespaceURI != null) {
+                        if (child.getNamespaceURI().equals(namespaceURI)) {
+                            children.addElement(child);
+                        }
+                    } else {
                         children.addElement(child);
                     }
-                } else {
-                    children.addElement(child);
                 }
             }
         }
@@ -263,5 +271,16 @@ public class XMLHelper {
             childElements[i] = (org.w3c.dom.Element) children.elementAt(i);
         }
         return childElements;
+    }
+
+    /**
+     * Strip off namespace prefix
+     */
+    private static String getLocalPart(String tagName) {
+        if (tagName.indexOf(":") > 0) {
+            return tagName.split(":")[1];
+        } else {
+            return tagName;
+        }
     }
 }
