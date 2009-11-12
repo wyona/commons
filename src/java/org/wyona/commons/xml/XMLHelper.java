@@ -283,4 +283,18 @@ public class XMLHelper {
             return tagName;
         }
     }
+
+    /**
+     * Replace special characters by their correspoding XML entities
+     * This method escapes those characters which must not occur in an xml text node.
+     * @param str String containing not-escaped characters
+     * @return Escaped string
+     */
+    public static String replaceEntities(String str) {
+        // NOTE: There may be some &amp; and some & mixed in the input, so first transform all &amp; to & and then transform all & back to &amp; this way we don't get double escaped &amp;amp;
+        str = str.replaceAll("&amp;", "&");
+        str = str.replaceAll("&", "&amp;");
+        str = str.replaceAll("<", "&lt;");
+        return str;
+    }
 }
