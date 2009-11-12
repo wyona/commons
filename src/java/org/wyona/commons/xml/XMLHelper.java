@@ -291,10 +291,17 @@ public class XMLHelper {
      * @return Escaped string
      */
     public static String replaceEntities(String str) {
+        if (str == null) {
+            return null;
+        }
+
         // NOTE: There may be some &amp; and some & mixed in the input, so first transform all &amp; to & and then transform all & back to &amp; this way we don't get double escaped &amp;amp;
         str = str.replaceAll("&amp;", "&");
         str = str.replaceAll("&", "&amp;");
         str = str.replaceAll("<", "&lt;");
+        //str = str.replaceAll(">", "&gt;");
+        str = str.replaceAll("'", "&apos;");
+        str = str.replaceAll("\"", "&quot;");
         return str;
     }
 }
