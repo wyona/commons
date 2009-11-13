@@ -25,7 +25,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 /**
- * XML utility class
+ * XML utility class (also see org.apache.commons.lang.StringEscapeUtils)
  */
 public class XMLHelper {
     private static final Logger log = Logger.getLogger( XMLHelper.class );
