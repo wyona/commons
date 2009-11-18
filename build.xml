@@ -99,11 +99,16 @@
     </jar>
   </target>
 
-  <target name="patch-pom-file">
-    <copy file="pom.xml" todir="build/lib"/>
+  <target name="patch-pom-file" depends="init">
+    <!--copy file="pom.xml" todir="build/lib"/>
     <replace file="build/lib/pom.xml" value="${commons.version}-r${subversion.revision}">
       <replacetoken>@VERSION@</replacetoken>
-    </replace>
+    </replace-->
+    <wyona-tools:generate-POM source-home="${source.home}"
+     in="build.xml" class="xml+io"
+     group="wyona-org-commons" artifact="wyona-org-commons" version="${commons.version}-r${subversion.revision}"
+     out="build/lib/pom.xml"
+   />
   </target>
 
   <target name="install-jar" description="Place jar into local maven repository" depends="clean, jar, patch-pom-file">
