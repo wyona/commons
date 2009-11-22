@@ -39,8 +39,8 @@ public class XMLHelper {
      * 
      * @param document The document to be displayed
      * @param isFragment
-     * @param indent
-     * @param charset
+     * @param indent If true, then the XML will be indented
+     * @param charset Encoding, e.g. utf-8
      * @return
      */
     public static final String documentToString( Document document, boolean isFragment, boolean indent, String charset ) {
