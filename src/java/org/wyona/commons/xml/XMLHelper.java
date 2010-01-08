@@ -304,4 +304,50 @@ public class XMLHelper {
         str = str.replaceAll("\"", "&quot;");
         return str;
     }
+
+    /**
+     * Check well-formedness of XML
+     * @param in XML as InputStream
+     */
+    public static java.io.InputStream isWellFormed(java.io.InputStream in) throws Exception {
+        log.info("Check well-formedness ...");
+        javax.xml.parsers.DocumentBuilderFactory dbf= javax.xml.parsers.DocumentBuilderFactory.newInstance();
+        try {
+            javax.xml.parsers.DocumentBuilder parser = dbf.newDocumentBuilder();
+
+            // TODO: Get log messages into log4j ...
+            //parser.setErrorHandler(...);
+
+            java.io.ByteArrayOutputStream baos  = new java.io.ByteArrayOutputStream();
+            byte[] buf = new byte[8192];
+            int bytesR;
+            while ((bytesR = in.read(buf)) != -1) {
+                baos.write(buf, 0, bytesR);
+            }
+
+            // Buffer within memory (TODO: Maybe replace with File-buffering ...)
+            // http://www-128.ibm.com/developerworks/java/library/j-io1/
+            byte[] memBuffer = baos.toByteArray();
+
+            // NOTE: DOCTYPE is being resolved/retrieved (e.g. xhtml schema from w3.org) also
+            //       if isValidating is set to false.
+            //       Hence, for performance and network reasons we use a local catalog ...
+            //       Also see http://www.xml.com/pub/a/2004/03/03/catalogs.html
+            //       resp. http://xml.apache.org/commons/components/resolver/
+            // TODO: What about a resolver factory?
+            parser.setEntityResolver(new org.apache.xml.resolver.tools.CatalogResolver());
+
+            parser.parse(new java.io.ByteArrayInputStream(memBuffer));
+            //org.w3c.dom.Document document = parser.parse(new ByteArrayInputStream(memBuffer));
+            log.info("Data seems to be well-formed :-)");
+
+            // Re-create input stream from memory buffer
+            in = new java.io.ByteArrayInputStream(memBuffer);
+            return in;
+        } catch (org.xml.sax.SAXException e) {
+            throw new Exception("The received data is not well-formed: " + e.getMessage());
+        } catch (Exception e) {
+            throw new Exception("The received data is either not well-formed or some other exception occured: " + e.getMessage());
+        }
+    }
 }
