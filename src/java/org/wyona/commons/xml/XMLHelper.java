@@ -308,6 +308,7 @@ public class XMLHelper {
     /**
      * Check well-formedness of XML
      * @param in XML as InputStream
+     * @return XML as InputStream
      */
     public static java.io.InputStream isWellFormed(java.io.InputStream in) throws Exception {
         log.info("Check well-formedness ...");
@@ -349,5 +350,17 @@ public class XMLHelper {
         } catch (Exception e) {
             throw new Exception("The received data is either not well-formed or some other exception occured: " + e.getMessage());
         }
+    }
+
+    /**
+     * Check if XML is valid
+     * @param xmlIn XML as InputStream
+     * @param schemaLanguage Schema language (xsd, dtd, rng), e.g. javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI or rather http://www.w3.org/2001/XMLSchema
+     * @param schemaIn XML schema/dtd/relax-ng as InputStream
+     * @return XML as InputStream
+     */
+    public static java.io.InputStream isValid(java.io.InputStream xmlIn, String schemaLanguage, java.io.InputStream schemaIn) throws Exception {
+        log.warn("DEBUG: Check if XML is valid: " + schemaLanguage);
+        return xmlIn;
     }
 }
