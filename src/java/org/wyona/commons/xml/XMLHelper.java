@@ -314,21 +314,22 @@ public class XMLHelper {
         log.info("Check well-formedness ...");
         javax.xml.parsers.DocumentBuilderFactory dbf= javax.xml.parsers.DocumentBuilderFactory.newInstance();
         try {
-            javax.xml.parsers.DocumentBuilder parser = dbf.newDocumentBuilder();
-
-            // TODO: Get log messages into log4j ...
-            //parser.setErrorHandler(...);
-
+            // Buffer within memory (TODO: Maybe replace with File-buffering ...)
+            // http://www-128.ibm.com/developerworks/java/library/j-io1/
             java.io.ByteArrayOutputStream baos  = new java.io.ByteArrayOutputStream();
             byte[] buf = new byte[8192];
             int bytesR;
             while ((bytesR = in.read(buf)) != -1) {
                 baos.write(buf, 0, bytesR);
             }
-
-            // Buffer within memory (TODO: Maybe replace with File-buffering ...)
-            // http://www-128.ibm.com/developerworks/java/library/j-io1/
             byte[] memBuffer = baos.toByteArray();
+
+
+            // Setup parser
+            javax.xml.parsers.DocumentBuilder parser = dbf.newDocumentBuilder();
+
+            // TODO: Get log messages into log4j ...
+            //parser.setErrorHandler(...);
 
             // NOTE: DOCTYPE is being resolved/retrieved (e.g. xhtml schema from w3.org) also
             //       if isValidating is set to false.
@@ -361,6 +362,23 @@ public class XMLHelper {
      */
     public static java.io.InputStream isValid(java.io.InputStream xmlIn, String schemaLanguage, java.io.InputStream schemaIn) throws Exception {
         log.warn("DEBUG: Check if XML is valid: " + schemaLanguage);
+
+        // Buffer within memory (TODO: Maybe replace with File-buffering ...)
+        // http://www-128.ibm.com/developerworks/java/library/j-io1/
+        java.io.ByteArrayOutputStream baos  = new java.io.ByteArrayOutputStream();
+        byte[] buf = new byte[8192];
+        int bytesR;
+        while ((bytesR = xmlIn.read(buf)) != -1) {
+            baos.write(buf, 0, bytesR);
+        }
+        byte[] memBuffer = baos.toByteArray();
+
+
+        javax.xml.validation.SchemaFactory sf = javax.xml.validation.SchemaFactory.newInstance(schemaLanguage);
+        javax.xml.validation.Schema schema = sf.newSchema(new javax.xml.transform.stream.StreamSource(schemaIn));
+        schema.newValidator().validate(new javax.xml.transform.stream.StreamSource(new java.io.ByteArrayInputStream(memBuffer)));
+
+        xmlIn = new java.io.ByteArrayInputStream(memBuffer);
         return xmlIn;
     }
 }
