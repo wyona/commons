@@ -5,7 +5,7 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * Utility to synchronize two directories/volumes
  */
 public class Sync {
 
@@ -32,15 +32,20 @@ public class Sync {
             return;
         }
 
+        String[] excludedFilesAndDirs = new String[0];
+        if (excludes != null) {
+            excludedFilesAndDirs = excludes.split(",");
+        }
+
         log.error("Synchronizing (Source: '" + source + "', Destination: '" + destination + "') ...");
-        doSynchronize(source, destination, ignoreHidden);
+        doSynchronize(source, destination, excludedFilesAndDirs, ignoreHidden);
         log.error("Synchronization finished.");
     }
 
     /**
      *
      */
-    private void doSynchronize(File source, File destination, boolean ignoreHidden) {
+    private void doSynchronize(File source, File destination, String[] excludes, boolean ignoreHidden) {
         if (!source.canRead()) {
             log.warn("Permission denied: " + source);
             return;
@@ -53,6 +58,19 @@ public class Sync {
         if (filesAndDirs != null) { // TODO: filesAndDirs can be null for example if permission denied
             for (int i = 0; i < filesAndDirs.length; i++) {
                 File fd = new File(source, filesAndDirs[i]);
+
+                boolean excluded = false;
+                for (int k = 0; k < excludes.length; k++) {
+                    if (excludes[k].equals(fd.getName())) {
+                        log.info("Excluded: " + fd.getName());
+                        excluded = true;
+                        break;
+                    }
+                }
+                if(excluded) {
+                    continue;
+                }
+
                 if (fd.isFile()) {
                     //log.warn("DEBUG: File: " + fd.getName());
                     if (!new File(destination, fd.getName()).isFile()) {
@@ -63,7 +81,7 @@ public class Sync {
                     if (!new File(destination, fd.getName()).isDirectory()) {
                         log.warn("No such directory at destination: " + new File(destination, fd.getName()));
                     } else {
-                        doSynchronize(new File(source, fd.getName()), new File(destination, fd.getName()), ignoreHidden);
+                        doSynchronize(new File(source, fd.getName()), new File(destination, fd.getName()), excludes, ignoreHidden);
                     }
                 } else {
                     log.warn("Neither file nor directory: " + fd.getAbsolutePath());
