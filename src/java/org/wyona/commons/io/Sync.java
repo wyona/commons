@@ -26,12 +26,12 @@ public class Sync {
             log.error("No such destination directory: " + destination.getAbsolutePath());
             return;
         }
-        if (destination.getAbsolutePath().equals(source.getAbsolutePath())) {
-            log.error("Source and destination directory are the same and hence synchronization aborted!");
+        if (destination.compareTo(source) == 0) {
+            log.error("Source and destination directory are the same '" + source.getAbsolutePath() + "' and hence synchronization aborted!");
             return;
         }
 
-        log.error("Synchronizing ...");
+        log.error("Synchronizing (Source: '" + source + "', Destination: '" + destination + "') ...");
         doSynchronize(source, destination);
         log.error("Synchronization finished.");
     }
