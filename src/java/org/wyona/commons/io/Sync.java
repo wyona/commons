@@ -12,9 +12,12 @@ public class Sync {
     private static Logger log = Logger.getLogger(Sync.class);
 
     /**
-     *
+     * Synchronize two directories/volumes recursively
+     * @param source Source directory
+     * @param destination Destination directory
+     * @param excludes Comma separated list of directories and files which should be excluded from synchronization
      */
-    public void synchronize(File source, File destination) {
+    public void synchronize(File source, File destination, String excludes) {
         if (!source.isDirectory()) {
             log.error("No such source directory: " + source.getAbsolutePath());
             return;
