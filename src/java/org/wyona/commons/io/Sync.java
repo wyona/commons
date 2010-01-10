@@ -16,8 +16,9 @@ public class Sync {
      * @param source Source directory
      * @param destination Destination directory
      * @param excludes Comma separated list of directories and files which should be excluded from synchronization
+     * @param ignoreHidden Ignore hidden files from synchronization
      */
-    public void synchronize(File source, File destination, String excludes) {
+    public void synchronize(File source, File destination, String excludes, boolean ignoreHidden) {
         if (!source.isDirectory()) {
             log.error("No such source directory: " + source.getAbsolutePath());
             return;
@@ -32,16 +33,20 @@ public class Sync {
         }
 
         log.error("Synchronizing (Source: '" + source + "', Destination: '" + destination + "') ...");
-        doSynchronize(source, destination);
+        doSynchronize(source, destination, ignoreHidden);
         log.error("Synchronization finished.");
     }
 
     /**
      *
      */
-    private void doSynchronize(File source, File destination) {
+    private void doSynchronize(File source, File destination, boolean ignoreHidden) {
         if (!source.canRead()) {
             log.warn("Permission denied: " + source);
+            return;
+        }
+        if (ignoreHidden && source.isHidden()) {
+            log.warn("Hidden file or directory: " + source);
             return;
         }
         String[] filesAndDirs = source.list();
@@ -58,7 +63,7 @@ public class Sync {
                     if (!new File(destination, fd.getName()).isDirectory()) {
                         log.warn("No such directory at destination: " + new File(destination, fd.getName()));
                     } else {
-                        doSynchronize(new File(source, fd.getName()), new File(destination, fd.getName()));
+                        doSynchronize(new File(source, fd.getName()), new File(destination, fd.getName()), ignoreHidden);
                     }
                 } else {
                     log.warn("Neither file nor directory: " + fd.getAbsolutePath());
