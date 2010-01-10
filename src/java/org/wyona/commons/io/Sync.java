@@ -40,24 +40,32 @@ public class Sync {
      *
      */
     private void doSynchronize(File source, File destination) {
+        if (!source.canRead()) {
+            log.warn("Permission denied: " + source);
+            return;
+        }
         String[] filesAndDirs = source.list();
-        for (int i = 0; i < filesAndDirs.length; i++) {
-            File fd = new File(source, filesAndDirs[i]);
-            if (fd.isFile()) {
-                //log.warn("DEBUG: File: " + fd.getName());
-                if (!new File(destination, fd.getName()).isFile()) {
-                    log.warn("No such file at destination: " + new File(destination, fd.getName()));
-                }
-            } else if (fd.isDirectory()) {
-                //log.warn("DEBUG: Directory: " + fd.getAbsolutePath());
-                if (!new File(destination, fd.getName()).isDirectory()) {
-                    log.warn("No such directory at destination: " + new File(destination, fd.getName()));
+        if (filesAndDirs != null) { // TODO: filesAndDirs can be null for example if permission denied
+            for (int i = 0; i < filesAndDirs.length; i++) {
+                File fd = new File(source, filesAndDirs[i]);
+                if (fd.isFile()) {
+                    //log.warn("DEBUG: File: " + fd.getName());
+                    if (!new File(destination, fd.getName()).isFile()) {
+                        log.warn("No such file at destination: " + new File(destination, fd.getName()));
+                    }
+                } else if (fd.isDirectory()) {
+                    //log.warn("DEBUG: Directory: " + fd.getAbsolutePath());
+                    if (!new File(destination, fd.getName()).isDirectory()) {
+                        log.warn("No such directory at destination: " + new File(destination, fd.getName()));
+                    } else {
+                        doSynchronize(new File(source, fd.getName()), new File(destination, fd.getName()));
+                    }
                 } else {
-                    doSynchronize(new File(source, fd.getName()), new File(destination, fd.getName()));
+                    log.warn("Neither file nor directory: " + fd.getAbsolutePath());
                 }
-            } else {
-                log.warn("Neither file nor directory: " + fd.getAbsolutePath());
             }
+        } else {
+            log.warn("No children found within: " + source);
         }
     }
 }
