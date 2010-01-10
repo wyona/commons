@@ -5,7 +5,7 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 /**
- * Utility to synchronize two directories/volumes
+ * Utility to synchronize two directories/volumes. Also see http://ant.apache.org/manual/CoreTasks/sync.html
  */
 public class Sync {
 
@@ -37,9 +37,9 @@ public class Sync {
             excludedFilesAndDirs = excludes.split(",");
         }
 
-        log.error("Synchronizing (Source: '" + source + "', Destination: '" + destination + "') ...");
+        log.warn("INFO: Synchronizing (Source: '" + source + "', Destination: '" + destination + "') ...");
         doSynchronize(source, destination, excludedFilesAndDirs, ignoreHidden);
-        log.error("Synchronization finished.");
+        log.warn("INFO: Synchronization finished.");
     }
 
     /**
@@ -75,6 +75,10 @@ public class Sync {
                     //log.warn("DEBUG: File: " + fd.getName());
                     if (!new File(destination, fd.getName()).isFile()) {
                         log.warn("No such file at destination: " + new File(destination, fd.getName()));
+                    } else {
+                        if (fd.length() != new File(destination, fd.getName()).length()) {
+                            log.warn("Source '" + fd.getAbsolutePath() + "' and destination '" + new File(destination, fd.getName()).getAbsolutePath() + "' have not the same size!");
+                        }
                     }
                 } else if (fd.isDirectory()) {
                     //log.warn("DEBUG: Directory: " + fd.getAbsolutePath());
