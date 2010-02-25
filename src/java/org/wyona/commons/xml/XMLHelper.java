@@ -365,7 +365,7 @@ public class XMLHelper {
      * @return XML as InputStream
      */
     public static java.io.InputStream isValid(java.io.InputStream xmlIn, String schemaLanguage, java.io.InputStream schemaIn) throws Exception {
-        log.warn("DEBUG: Check if XML is valid: " + schemaLanguage);
+        log.debug("Check if XML is valid: " + schemaLanguage);
 
         // Buffer within memory (TODO: Maybe replace with File-buffering ...)
         // http://www-128.ibm.com/developerworks/java/library/j-io1/
@@ -402,7 +402,7 @@ public class XMLHelper {
         for (int i = 0; i < nl.getLength(); i++) {
             Node node = nl.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                log.warn("DEBUG: Element found");
+                log.debug("Element found");
                 NodeList children = node.getChildNodes();
                 for (int k = 0; k < children.getLength(); k++) {
                     if (children.item(k).getNodeType() == Node.TEXT_NODE) {
@@ -414,10 +414,10 @@ public class XMLHelper {
                     }
                 }
             } else if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-                log.warn("DEBUG: Attribute found");
+                log.debug("Attribute found");
                 values[i] = ((org.w3c.dom.Attr) node).getValue();
             } else {
-                log.warn("DEBUG: Neither Attribute nor Element found");
+                log.debug("Neither Attribute nor Element found");
                 values[i] = node.getNodeValue();
             }
         }
