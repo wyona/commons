@@ -14,6 +14,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
 import org.apache.xml.resolver.tools.CatalogResolver;
@@ -28,7 +32,7 @@ import org.w3c.dom.Text;
  * XML utility class (also see org.apache.commons.lang.StringEscapeUtils)
  */
 public class XMLHelper {
-    private static final Logger log = Logger.getLogger( XMLHelper.class );
+    private static final Logger log = Logger.getLogger(XMLHelper.class);
     private static final String YES = "yes";
     private static final String NO = "no";
     private static final String DEFAULT_ENCODING = "iso-8859-1";
@@ -43,7 +47,7 @@ public class XMLHelper {
      * @param charset Encoding, e.g. utf-8
      * @return
      */
-    public static final String documentToString( Document document, boolean isFragment, boolean indent, String charset ) {
+    public static final String documentToString(Document document, boolean isFragment, boolean indent, String charset) {
         if( document == null ){
             log.error("Document is null!");
             return null;
@@ -181,8 +185,8 @@ public class XMLHelper {
      * @param attribs Hashmap of element attributes (optional)
      * @return Fully formatted xml element 
      */
-    public static final Element createTextElement( Document doc, String name, String value, HashMap<String, String> attribs ){
-        Element child = doc.createElement( name );
+    public static final Element createTextElement(Document doc, String name, String value, HashMap<String, String> attribs) {
+        Element child = doc.createElement(name);
         if( attribs !=null ){
             Iterator<Entry<String,String>> iter = attribs.entrySet().iterator();
             while( iter.hasNext() ){
@@ -380,5 +384,43 @@ public class XMLHelper {
 
         xmlIn = new java.io.ByteArrayInputStream(memBuffer);
         return xmlIn;
+    }
+
+    /**
+     * Get values re a specific Xpath
+     * @param doc XML DOM Document
+     * @param xpathString XPath string
+     */
+    public static String[] valueOf(Document doc, String xpathString) throws Exception {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        XPathExpression expr = xpath.compile(xpathString);
+        NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+        if (nl.getLength() <= 0) {
+            log.warn("No nodes found for xpath: " + xpathString);
+        }
+        String[] values = new String[nl.getLength()];
+        for (int i = 0; i < nl.getLength(); i++) {
+            Node node = nl.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                log.warn("DEBUG: Element found");
+                NodeList children = node.getChildNodes();
+                for (int k = 0; k < children.getLength(); k++) {
+                    if (children.item(k).getNodeType() == Node.TEXT_NODE) {
+                        if (values[i] == null) {
+                            values[i] = children.item(k).getNodeValue();
+                        } else {
+                            values[i] = values[i] + children.item(k).getNodeValue();
+                        }
+                    }
+                }
+            } else if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+                log.warn("DEBUG: Attribute found");
+                values[i] = ((org.w3c.dom.Attr) node).getValue();
+            } else {
+                log.warn("DEBUG: Neither Attribute nor Element found");
+                values[i] = node.getNodeValue();
+            }
+        }
+        return values;
     }
 }
