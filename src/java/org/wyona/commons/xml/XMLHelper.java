@@ -402,10 +402,10 @@ public class XMLHelper {
         for (int i = 0; i < nl.getLength(); i++) {
             Node node = nl.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                log.debug("Element found");
+                log.debug("Element found: " + xpathString);
                 NodeList children = node.getChildNodes();
                 for (int k = 0; k < children.getLength(); k++) {
-                    if (children.item(k).getNodeType() == Node.TEXT_NODE) {
+                    if (children.item(k).getNodeType() == Node.TEXT_NODE || children.item(k).getNodeType() == Node.CDATA_SECTION_NODE) {
                         if (values[i] == null) {
                             values[i] = children.item(k).getNodeValue();
                         } else {
@@ -413,11 +413,12 @@ public class XMLHelper {
                         }
                     }
                 }
+                log.debug("Value of: " + values[i]);
             } else if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-                log.debug("Attribute found");
+                log.debug("Attribute found: " + xpathString);
                 values[i] = ((org.w3c.dom.Attr) node).getValue();
             } else {
-                log.debug("Neither Attribute nor Element found");
+                log.warn("Neither Attribute nor Element found (" + xpathString + "), but node type: " + node.getNodeType());
                 values[i] = node.getNodeValue();
             }
         }
