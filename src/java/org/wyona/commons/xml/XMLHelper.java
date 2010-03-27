@@ -389,7 +389,7 @@ public class XMLHelper {
     /**
      * Get values re a specific Xpath
      * @param doc XML DOM Document
-     * @param xpathString XPath string
+     * @param xpathString XPath string, e.g. "/scheduler/jobs/job/custom-config/*[local-name()='email' and namespace-uri()='http://www.foo.bar/yanel/scheduler/1.0']/@to"
      */
     public static String[] valueOf(Document doc, String xpathString) throws Exception {
         XPath xpath = XPathFactory.newInstance().newXPath();
