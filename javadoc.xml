@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<project name="javadoc" default="generate-javadoc">
+  <!-- Generate Javadoc (if not already done) -->
+  <target name="generate-javadoc" depends="init">
+
+    <!-- TODO: The javadoc-not-exists target throws an exception on Windows -->
+    <condition property="javadoc-does-not-exist-yet">
+      <not>
+        <available file="${build.dir}/javadoc/index-all.html" type="file"/>
+      </not>
+    </condition>
+    <antcall target="javadoc-not-exists"/>
+
+    <antcall target="javadoc-exists"/>
+  </target>
+  
+  <target name="javadoc-not-exists" depends="init, set-javadoc-classpath" if="javadoc-does-not-exist-yet">
+    <mkdir dir="${build.dir}/javadoc"/>
+    <javadoc
+      packagenames="org.*"
+      destdir="${build.dir}/javadoc"
+      classpathref="classpath.javadoc">
+      <fileset dir="src" defaultexcludes="yes">
+        <include name="java/**"/>
+        <exclude name="**/README.txt"/>
+        <exclude name="**/.**"/>
+      </fileset>
+    </javadoc>
+    <echo/>
+    <echo/>
+    <echo>You should find the javadoc under: ${build.dir}/javadoc/index.html</echo>
+  </target>
+
+  <target name="javadoc-exists" unless="javadoc-does-not-exist-yet">
+    <echo/>
+    <echo/>
+    <echo>The Javadoc already exists. You should find it under: ${build.dir}/javadoc/index.html</echo>
+  </target>
+  
+  <!-- Set javadoc classpath -->
+  <target name="set-javadoc-classpath" depends="init">
+    <path id="classpath.javadoc">
+      <pathelement path="${build.dir}/classes"/>
+    </path>
+    <property name="javadoc.cp" refid="classpath.javadoc"/>
+    <echo>INFO: Classpath to generate Javadoc: ${javadoc.cp}</echo>
+  </target>
+
+  <target name="javadoc" description="Generate Javadoc (if not already done)" depends="generate-javadoc"/>
+
+  <target name="clean-javadoc" description="clean javadoc" depends="init">
+    <delete dir="${build.dir}/javadoc"/>
+  </target>
+</project>  
