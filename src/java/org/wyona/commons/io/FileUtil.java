@@ -24,7 +24,7 @@ public final class FileUtil {
      */
     public static File file(String absoluteDir, String relativeFile) {
         File file = new File(FilenameUtils.concat(absoluteDir, relativeFile));
-        return file;
+        return new File(file.getAbsolutePath()); // INFO: Workaround in order to make sure Java recognizes it as absolute File
     }
 
     /**
