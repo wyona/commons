@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Utility to synchronize two directories/volumes. Also see http://ant.apache.org/manual/CoreTasks/sync.html
+ * INFO: At the moment it only displays the differences, but does not copy anything!
  */
 public class Sync {
 
