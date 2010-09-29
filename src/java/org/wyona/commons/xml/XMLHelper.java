@@ -216,10 +216,19 @@ public class XMLHelper {
 
     /**
      * Write DOM document into output stream
+     *
+     * @param doc DOM document which will be written into OutputStream
+     * @param out OutputStream into which the XML document is written
      */
     public static void writeDocument(Document doc, java.io.OutputStream out) throws Exception {
-        javax.xml.transform.TransformerFactory.newInstance().newTransformer().transform(new javax.xml.transform.dom.DOMSource(doc), new javax.xml.transform.stream.StreamResult(out));
-        out.close();
+        if (doc == null) {
+            throw new Exception("Document is null");
+        } else if (out == null) {
+            throw new Exception("OutputStream is null");
+        } else {
+            javax.xml.transform.TransformerFactory.newInstance().newTransformer().transform(new javax.xml.transform.dom.DOMSource(doc), new javax.xml.transform.stream.StreamResult(out));
+            out.close();
+        }
     }
 
     /**
