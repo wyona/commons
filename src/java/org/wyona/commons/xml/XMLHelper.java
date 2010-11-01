@@ -37,7 +37,21 @@ public class XMLHelper {
     private static final String NO = "no";
     private static final String DEFAULT_ENCODING = "iso-8859-1";
     private static final int INDENT_AMOUNT = 2;
-    
+
+    /**
+     * Convert a Document into an input stream
+     * 
+     * @param document The source document
+     * @param isFragment
+     * @param indent If true, then the XML will be indented
+     * @param charset Encoding, e.g. utf-8
+     * @return XML document as InputStream
+     */
+    public static final java.io.InputStream getInputStream(Document document, boolean isFragment, boolean indent, String charset) {
+        // TODO: Is this the most efficient way?!
+        return new java.io.ByteArrayInputStream(documentToString(document, isFragment, indent, charset).getBytes());
+    }
+
     /**
      * Convert a Document into something human readable.
      * 
@@ -60,12 +74,12 @@ public class XMLHelper {
         try {
             Transformer t = tfac.newTransformer();
             if( isFragment )
-                t.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, YES );
+                t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, YES);
             
             if( charset == null) {
                 t.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
 	    } else {
-                t.setOutputProperty(OutputKeys.ENCODING, charset );
+                t.setOutputProperty(OutputKeys.ENCODING, charset);
             }
 
             t.setOutputProperty(OutputKeys.INDENT, (indent) ? YES : NO);
@@ -151,6 +165,17 @@ public class XMLHelper {
      */
     public static Document readDocument(java.io.InputStream in) throws Exception {
         return createBuilder().parse(in);
+    }
+
+    /**
+     * Append XML string fragment to a DOM element
+     * @param element DOM element to which fragment will be appended
+     * @param xmlString XML as string, e.g. <div><p>Hello <strong>World</strong></p></div>
+     */
+    public static void appendFragment(Element element, String xmlString) throws Exception {
+        Document tmpDoc = createBuilder().parse(new org.xml.sax.InputSource(new java.io.StringReader(xmlString)));
+        Node importedNode = element.getOwnerDocument().importNode(tmpDoc.getDocumentElement(), true);
+        element.appendChild(importedNode);
     }
            
     /**
