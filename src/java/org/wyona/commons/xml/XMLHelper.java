@@ -77,6 +77,7 @@ public class XMLHelper {
                 t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, YES);
             
             if( charset == null) {
+                log.warn("No encoding set, hence use default encoding: " + DEFAULT_ENCODING);
                 t.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
 	    } else {
                 t.setOutputProperty(OutputKeys.ENCODING, charset);
