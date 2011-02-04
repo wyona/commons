@@ -47,9 +47,12 @@ public class XMLHelper {
      * @param charset Encoding, e.g. utf-8
      * @return XML document as InputStream
      */
-    public static final java.io.InputStream getInputStream(Document document, boolean isFragment, boolean indent, String charset) {
+    public static final java.io.InputStream getInputStream(Document document, boolean isFragment, boolean indent, String charset) throws Exception {
         // TODO: Is this the most efficient way?!
-        return new java.io.ByteArrayInputStream(documentToString(document, isFragment, indent, charset).getBytes());
+        //return new java.io.ByteArrayInputStream(documentToString(document, isFragment, indent, charset).getBytes()); // WARN: This does not seem to work with special characters!
+        java.io.ByteArrayOutputStream bout = new java.io.ByteArrayOutputStream(); // INFO: Also see http://ostermiller.org/convert_java_outputstream_inputstream.html
+        writeDocument(document, bout); // WARN: This can create memory issues, but at least works with special characters!
+        return new java.io.ByteArrayInputStream(bout.toByteArray());
     }
 
     /**
