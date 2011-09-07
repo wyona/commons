@@ -143,6 +143,9 @@ public class XMLHelper {
         return t;
     }
 
+    /**
+     * Get node list as string, e.g. <?xml version="1.0"?><body xmlns="http://www.w3.org/1999/xhtml"><p>Hello World!</p></body>
+     */
     public static String stringFromNodeList(NodeList nodeList, int indentation) {
         StringBuilder sb = new StringBuilder();
         Writer w = new StringWriter();
