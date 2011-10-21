@@ -180,6 +180,7 @@ public class XMLHelper {
      * @param xmlString XML as string, e.g. <div><p>Hello <strong>World</strong></p></div>
      */
     public static void appendFragment(Element element, String xmlString) throws Exception {
+        // TODO: xmlString without "root" element should also be allowed
         Document tmpDoc = createBuilder().parse(new org.xml.sax.InputSource(new java.io.StringReader(xmlString)));
         Node importedNode = element.getOwnerDocument().importNode(tmpDoc.getDocumentElement(), true);
         element.appendChild(importedNode);
