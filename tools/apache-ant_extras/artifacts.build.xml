@@ -1,0 +1,123 @@
+<project name="wyona-artifacts-tools"
+ xmlns:wyona-tools="http://www.wyona.org/tools/1.0"
+ xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+>
+
+  <!--target name="init-dependencies">
+  </target-->
+
+  <macrodef name="dependencies" uri="http://www.wyona.org/tools/1.0">
+   <attribute name="verbose" default="false"/>
+   <attribute name="class" default=""/>
+   <element name="dependencies" optional="true" implicit="true"/>
+   <sequential>
+    <artifact:remoteRepository id="repository" url="http://maven2.wyona.org/"/><!-- TODO URL should be configurable -->
+    <wyona-tools:deps scope="compile" type="jar" prefix="@{class}" verbose="@{verbose}">
+      <dependencies/>
+    </wyona-tools:deps>
+    <wyona-tools:deps scope="runtime" type="jar" prefix="@{class}" verbose="@{verbose}"><!--verbose="true"-->
+      <dependencies/>
+    </wyona-tools:deps>
+    <wyona-tools:deps scope="test" type="jar" prefix="@{class}" verbose="@{verbose}">
+      <dependencies/>
+    </wyona-tools:deps>
+   </sequential>
+  </macrodef>
+
+  <macrodef name="deps" uri="http://www.wyona.org/tools/1.0">
+   <attribute name="scope"/>
+   <attribute name="type"/>
+   <attribute name="verbose" default="false"/>
+   <attribute name="prefix"/>
+   <attribute name="-p" default="@{scope}.@{type}.@{prefix}.dependencies"/>
+   <element name="deps" optional="true" implicit="true"/>
+   <sequential>
+    <artifact:dependencies
+     type="@{type}"
+     useScope="@{scope}"
+     filesetId="@{-p}.fileset"
+     verbose="@{verbose}"
+    >
+    <!--
+     pathId="@{-p}.classpath"
+    -->
+      <remoteRepository refid="repository"/>
+      <deps/>
+    </artifact:dependencies>
+    <echo level="info">@{-p}.fileset: ${toString:@{-p}.fileset}</echo>
+    <!--echo level="verbose">@{-p}.classpath: ${toString:@{-p}.classpath}</echo-->
+    <!--property name="@{-p}.cp" refid="@{-p}.classpath"/-->
+   </sequential>
+  </macrodef>
+
+
+  <!-- TODO: Install a partial JAR: core, impl, etc. -->
+
+  <!-- Install Wyona JAR -->
+  <macrodef name="install-jar" uri="http://www.wyona.org/tools/1.0">
+   <attribute name="source-home"/>
+   <attribute name="id"/>
+   <attribute name="name" default="wyona-@{id}"/>
+   <attribute name="version"/>
+   <attribute name="package-dir" default="@{id}"/>
+   <attribute name="package-root-path" default="org/wyona/@{package-dir}"/>
+   <attribute name="classes-dir" default="${classes.dir}"/>
+   <attribute name="sources-dir" default="@{source-home}/src/@{package-dir}/java"/>
+   <element name="jar-elements" optional="true" implicit="true"/>
+   <sequential>
+
+    <mkdir dir="@{source-home}/build/lib"/>
+    <jar destfile="@{source-home}/build/lib/@{name}-@{version}.jar"
+      basedir="@{classes-dir}"
+      includes="@{package-root-path}/**"
+    >
+      <jar-elements/>
+    </jar>
+
+    <copy file="@{source-home}/src/@{id}/pom.xml" tofile="@{source-home}/build/lib/pom-@{id}.xml"/>
+    <replace file="@{source-home}/build/lib/pom-@{id}.xml" value="@{version}">
+      <replacetoken>@VERSION@</replacetoken>
+    </replace>
+
+    <mkdir dir="@{source-home}/build/lib"/>
+    <jar destfile="@{source-home}/build/lib/@{name}-@{version}-sources.jar"
+      basedir="@{sources-dir}"
+      includes="@{package-root-path}/**"
+    >
+      <jar-elements/>
+    </jar>
+
+    <artifact:pom id="@{id}.project" file="@{source-home}/build/lib/pom-@{id}.xml"/>
+
+    <artifact:install file="@{source-home}/build/lib/@{name}-@{version}.jar">
+      <pom refid="@{id}.project"/>
+      <attach file="@{source-home}/build/lib/@{name}-@{version}-sources.jar" classifier="sources"/>
+    </artifact:install>
+
+   </sequential>
+  </macrodef>
+
+  <macrodef name="generate-POM" uri="http://www.wyona.org/tools/1.0">
+   <attribute name="source-home"/>
+   <attribute name="in" default="@{source-home}/src/build/dependencies.xml"/>
+   <attribute name="class" default="''"/>
+   <attribute name="group"/>
+   <attribute name="artifact"/>
+   <attribute name="version"/>
+   <attribute name="out"/>
+   <element name="jar-elements" optional="true" implicit="true"/>
+   <sequential>
+    <xslt
+     in="@{in}"
+     style="@{source-home}/tools/apache-ant_extras/dependencies2POM.xsl"
+     out="@{out}"
+    >
+      <param name="dependencies-class" expression="@{class}"/>
+      <param name="group-ID" expression="@{group}"/>
+      <param name="artifact-ID" expression="@{artifact}"/>
+      <param name="version" expression="@{version}"/>
+    </xslt>
+   </sequential>
+  </macrodef>
+
+</project>
