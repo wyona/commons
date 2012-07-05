@@ -171,7 +171,10 @@ public class XMLHelper {
      * @param in Input stream
      */
     public static Document readDocument(java.io.InputStream in) throws Exception {
-        return createBuilder().parse(in);
+        //return createBuilder().parse(in);
+        Document doc = createBuilder().parse(in);
+        in.close();
+        return doc;
     }
 
     /**
@@ -227,8 +230,12 @@ public class XMLHelper {
                 child.setAttribute( attr.getKey(), attr.getValue() );    
             }
         }
-        Text text = doc.createTextNode( value );
-        child.appendChild(text);
+        if (value != null) {
+            Text text = doc.createTextNode(value);
+            child.appendChild(text);
+        } else {
+            log.warn("Value of element '" + name + "' is null!");
+        }
         return child;
     }
 
