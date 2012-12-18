@@ -51,7 +51,7 @@ public class XMLHelper {
         // TODO: Is this the most efficient way?!
         //return new java.io.ByteArrayInputStream(documentToString(document, isFragment, indent, charset).getBytes()); // WARN: This does not seem to work with special characters!
         java.io.ByteArrayOutputStream bout = new java.io.ByteArrayOutputStream(); // INFO: Also see http://ostermiller.org/convert_java_outputstream_inputstream.html
-        writeDocument(document, bout); // WARN: This can create memory issues, but at least works with special characters!
+        writeDocument(document, bout, indent); // WARN: This can create memory issues, but at least works with special characters!
         return new java.io.ByteArrayInputStream(bout.toByteArray());
     }
 
@@ -134,6 +134,9 @@ public class XMLHelper {
     }
     */
 
+    /**
+     * @param indentation If greater than zero, then the XML will be indented by the value specified
+     */
     private static Transformer getXMLidentityTransformer(int indentation) throws Exception {
         TransformerFactory factory = TransformerFactory.newInstance();
         Transformer t = factory.newTransformer(); // identity transform
@@ -261,12 +264,28 @@ public class XMLHelper {
      * @param out OutputStream into which the XML document is written
      */
     public static void writeDocument(Document doc, java.io.OutputStream out) throws Exception {
+        writeDocument(doc, out, false);
+    }
+
+    /**
+     * Write DOM document into output stream
+     *
+     * @param doc DOM document which will be written into OutputStream
+     * @param out OutputStream into which the XML document is written
+     * @param indent If true, then the XML will be indented
+     */
+    private static void writeDocument(Document doc, java.io.OutputStream out, boolean indent) throws Exception {
         if (doc == null) {
             throw new Exception("Document is null");
         } else if (out == null) {
             throw new Exception("OutputStream is null");
         } else {
-            javax.xml.transform.TransformerFactory.newInstance().newTransformer().transform(new javax.xml.transform.dom.DOMSource(doc), new javax.xml.transform.stream.StreamResult(out));
+            int indentationValue = 0;
+            if (indent) {
+                indentationValue = INDENT_AMOUNT;
+            }
+            Transformer t = getXMLidentityTransformer(indentationValue);
+            t.transform(new javax.xml.transform.dom.DOMSource(doc), new javax.xml.transform.stream.StreamResult(out));
             out.close();
         }
     }
