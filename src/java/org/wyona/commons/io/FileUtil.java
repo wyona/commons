@@ -7,10 +7,14 @@ import java.io.IOException;
 
 import org.apache.commons.io.FilenameUtils;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  */
 public final class FileUtil {
+
+    private static Logger log = Logger.getLogger(FileUtil.class);
     
     private static final int BUFFER_SIZE = 4096*4;
 
@@ -136,15 +140,48 @@ public final class FileUtil {
         }
         return true;
     }
-    
-    
-    public static boolean copyFile(File from, File to, byte[] buf)
-    {
-        if (buf == null)
-            buf = new byte[BUFFER_SIZE];
 
-        //
-        //      System.out.println("Copy file ("+from+","+to+")");
+    /**
+     * Copy file
+     * @param from Existing source file
+     * @param to Destination file
+     * @param createDirectories Flag whether directories containing destination file should created when they don't exist yet
+     * @return true when file was copied successfully and false otherwise
+     */
+    public static boolean copyFile(File from, File to, boolean createDirectories) {
+        return copyFile(from, to, new byte[1024], createDirectories);
+    }
+
+    /**
+     * Copy file
+     * @param from Existing source file
+     * @param to Destination file
+     * @param buf Optional buffer, whereas if set to null, then a buffer with a certain default size will be used
+     * @return true when file was copied successfully and false otherwise
+     */
+    public static boolean copyFile(File from, File to, byte[] buf) {
+        return copyFile(from, to, buf, false);
+    }
+
+    /**
+     * Copy file
+     * @param from Existing source file
+     * @param to Destination file
+     * @param buf Optional buffer, whereas if set to null, then a buffer with a certain default size will be used
+     * @param createDirectories Flag whether directories containing destination file should created when they don't exist yet
+     * @return true when file was copied successfully and false otherwise
+     */
+    private static boolean copyFile(File from, File to, byte[] buf, boolean createDirectories) {
+        if (buf == null) {
+            buf = new byte[BUFFER_SIZE];
+        }
+
+        if (createDirectories && !to.getParentFile().isDirectory()) {
+            to.getParentFile().mkdirs();
+            log.warn("Directory '" + to.getParent() + "' has been created.");
+        }
+
+        log.debug("Copy file ("+from+","+to+")");
         FileInputStream from_s = null;
         FileOutputStream to_s = null;
 
@@ -164,8 +201,7 @@ public final class FileUtil {
             to_s.close();
             to_s = null;
         }
-        catch (IOException ioe)
-        {
+        catch (IOException ioe) {
             return false;
         }
         finally
