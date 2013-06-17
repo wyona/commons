@@ -292,6 +292,7 @@ public class XMLHelper {
 
     /**
      * Get child elements with a specific local name and a matching attribute name/value
+     * @param element Parent element containing child elements
      */
     public static org.w3c.dom.Element[] getElements(org.w3c.dom.Element element, String localName, String attributeName, String attributeValue) throws Exception {
         org.w3c.dom.Element[] elements = getChildElements(element, localName, null);
@@ -311,7 +312,7 @@ public class XMLHelper {
 
     /**
      * Get child elements with a specific local name and namespace
-     * @param node Node
+     * @param node Parent node containing child nodes
      * @param localName Local name of child nodes
      * @param namespaceURI Namespace of child nodes, whereas if null is specified, then it will not be taken into account
      */
