@@ -171,13 +171,21 @@ public class XMLHelper {
 
     /**
      * Create DOM document from input stream
-     * @param in Input stream
+     * @param in Input stream containing XML
+     * @param resolving True if the document reader will resolve entities as the document is parsed; false otherwise
      */
-    public static Document readDocument(java.io.InputStream in) throws Exception {
-        //return createBuilder().parse(in);
-        Document doc = createBuilder().parse(in);
+    public static Document readDocument(java.io.InputStream in, boolean resolving) throws Exception {
+        Document doc = createBuilder(resolving).parse(in);
         in.close();
         return doc;
+    }
+
+    /**
+     * Create DOM document from input stream
+     * @param in Input stream containing XML
+     */
+    public static Document readDocument(java.io.InputStream in) throws Exception {
+        return readDocument(in, true);
     }
 
     /**
@@ -244,17 +252,38 @@ public class XMLHelper {
 
     /**
      * Creates a non-validating and namespace-aware DocumentBuilder.
+     * @param resolving True if the parser produced will resolve entities as the document is parsed; false otherwise.
      * @return A new DocumentBuilder object.
      * @throws ParserConfigurationException if an error occurs
      */
-    public static DocumentBuilder createBuilder() throws ParserConfigurationException {
+    public static DocumentBuilder createBuilder(boolean resolving) throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
 
-        CatalogResolver cr = new CatalogResolver();
-        builder.setEntityResolver(cr);
+        if (resolving) {
+            CatalogResolver cr = new CatalogResolver();
+            builder.setEntityResolver(cr);
+        } else {
+            builder.setEntityResolver(new org.xml.sax.EntityResolver() {
+                @Override
+                public org.xml.sax.InputSource resolveEntity(String publicId, String systemId) throws org.xml.sax.SAXException, java.io.IOException {
+                    log.warn("Do not resolve entities: " + publicId + ", " + systemId);
+                    return new org.xml.sax.InputSource(new java.io.StringReader(""));
+                }
+            });
+        }
+
         return builder;
+    }
+
+    /**
+     * Creates a non-validating and namespace-aware DocumentBuilder.
+     * @return A new DocumentBuilder object.
+     * @throws ParserConfigurationException if an error occurs
+     */
+    public static DocumentBuilder createBuilder() throws ParserConfigurationException {
+        return createBuilder(true);
     }
 
     /**
