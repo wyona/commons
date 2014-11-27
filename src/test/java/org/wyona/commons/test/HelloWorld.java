@@ -34,8 +34,6 @@ public class HelloWorld {
         System.out.println("Name without suffix: \"" + PathUtil.getNameWithoutSuffix("/foo/.txt") + "\"");
         System.out.println("Name without suffix: \"" + PathUtil.getNameWithoutSuffix("/foo/bar") + "\"");
 
-
-
         //String excludes = null;
         //String excludes = ".Trashes";
         String excludes = ".Trashes,.Spotlight-V100,.fseventsd,MANUALS,SOFTWARE,LACIE,Cube Backup,.TemporaryItems,.com.apple.timemachine.donotpresent,Littledisk_713519.dbd,Littledisk_713519.txt,Harddisk-dbnp_713520.dbd,Harddisk-dbnp_713520.txt,Desktop DF,Desktop DB,.DS_Store,LaCie.ini,Render Files"; // INFO: Comma separated list of files and diretories to be excluded from synchronization. Also see http://hostilefork.com/2009/12/02/trashes-fseventsd-and-spotlight-v100/
@@ -45,5 +43,8 @@ public class HelloWorld {
         System.out.println("Try to sync the two directories '" + source + "' and '" + destination + "' ...");
         new org.wyona.commons.io.Sync().synchronize(new File(source), new File(destination), excludes, ignoreHidden);
         //new org.wyona.commons.io.Sync().synchronize(new File("/Volumes/Cube Backup"), new File("/Volumes/Apache Oakland 2009 Original"), excludes, ignoreHidden);
+
+        String title = "Hello World";
+        System.out.println("Generate filename from title '" + title + "': " + PathUtil.getFilenameFromTitle(title));
     }
 }
