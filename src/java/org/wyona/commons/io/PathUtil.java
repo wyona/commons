@@ -11,6 +11,15 @@ public class PathUtil {
     private static Logger log = LogManager.getLogger(PathUtil.class);
 
     /**
+     * Generate filename from title
+     * @param title Title, e.g. 'Hello World!'
+     * @return filename, e.g. 'hello_world'
+     */
+    public static String getFilenameFromTitle(String title) {
+        return title.toLowerCase().replace(" ", "_"); // TODO: Remove all special characters
+    }
+
+    /**
      * Get name, e.g. path = /foo/bar.txt --> bar.txt
      */
     public static String getName(String path) {
