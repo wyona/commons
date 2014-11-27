@@ -1,13 +1,14 @@
 package org.wyona.commons.io;
 
-import org.apache.log4j.Category;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
  */
 public class PathUtil {
 
-    private static Category log = Category.getInstance(PathUtil.class);
+    private static Logger log = LogManager.getLogger(PathUtil.class);
 
     /**
      * Get name, e.g. path = /foo/bar.txt --> bar.txt
