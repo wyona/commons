@@ -42,11 +42,8 @@ public class HelloWorld {
         boolean ignoreHidden = true;
         String source = "/Volumes/Apache Oakland 2009 Original";
         String destination = "/Volumes/Apache Oakland 2009 Original_2";
-        //new org.wyona.commons.io.Sync().synchronize(new File("/foo/bar"), new File("/foo/bar"), excludes, ignoreHidden);
-        //new org.wyona.commons.io.Sync().synchronize(new File("/Volumes/Apache Oakland 2009 Original"), new File("/Volumes/Apache Oakland 2009 Original"), excludes, ignoreHidden);
-
+        System.out.println("Try to sync the two directories '" + source + "' and '" + destination + "' ...");
         new org.wyona.commons.io.Sync().synchronize(new File(source), new File(destination), excludes, ignoreHidden);
-
         //new org.wyona.commons.io.Sync().synchronize(new File("/Volumes/Cube Backup"), new File("/Volumes/Apache Oakland 2009 Original"), excludes, ignoreHidden);
     }
 }
