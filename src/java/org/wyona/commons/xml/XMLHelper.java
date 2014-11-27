@@ -19,7 +19,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 
 import org.w3c.dom.Document;
@@ -32,7 +33,7 @@ import org.w3c.dom.Text;
  * XML utility class (also see org.apache.commons.lang.StringEscapeUtils)
  */
 public class XMLHelper {
-    private static final Logger log = Logger.getLogger(XMLHelper.class);
+    private static final Logger log = LogManager.getLogger(XMLHelper.class);
     private static final String YES = "yes";
     private static final String NO = "no";
     private static final String DEFAULT_ENCODING = "iso-8859-1";
